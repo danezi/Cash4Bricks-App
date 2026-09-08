@@ -20,15 +20,38 @@ Wareneingang gegen die eingereichte Liste abgeglichen und der Deal abgeschlossen
 
 ## Umgebung aufsetzen
 
-> TODO (M0-002 ff.): Node-Version, `npm install`, `.env`-Variablen, `npx expo start`
+```bash
+npm install
+npx expo start        # Dev-Server; danach i (iOS-Simulator) / a (Android-Emulator) / w (Web)
+```
+
+Node ≥ 20 empfohlen. Umgebungsvariablen (später) in `.env` – wird von Git ignoriert.
 
 ## Scripts
 
-> TODO (M0): `lint`, `typecheck`, `test`, `build`
+| Script | Zweck |
+|--------|-------|
+| `npm start` | Expo Dev-Server |
+| `npm run android` / `npm run ios` / `npm run web` | Dev-Server direkt auf Zielplattform |
+| `npm run typecheck` | `tsc --noEmit` |
+| `npm run lint` | `expo lint` |
+
+> TODO (M0): ESLint-Config (M0-004), Tests (M0-007), CI (M0-006)
 
 ## Projektstruktur
 
-> TODO (M0): `app/` (Screens), `src/` (api, domain, ui, lib), `supabase/` (migrations, functions)
+```
+src/
+  app/         Expo-Router-Screens und -Layouts (nur Screens/Layouts)
+  api/         Adapter-Schicht (Mock ↔ Supabase, per ENV umschaltbar)
+  domain/      Zod-Schemas + Typen der Kernentitäten
+  features/    fachliche Bausteine je Anwendungsfall (scan, submission, dashboard, ...)
+  ui/          Designsystem: Tokens + Basiskomponenten
+  lib/         Querschnitt: Clients, i18n, Helfer
+assets/        Icons, Splash, Bilder
+```
+
+> `supabase/` (migrations, functions) folgt ab M0-014.
 
 ## Lizenz
 
