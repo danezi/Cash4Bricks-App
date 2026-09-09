@@ -138,6 +138,20 @@ Die fachlichen Typen und die reinen Geld-Pfad-Funktionen liegen framework-frei i
 [`src/domain/`](src/domain/) (Zod-Schemas, `z.infer`-Typen, `estimatedTotal` /
 `finalTotal` / `missingItems`).
 
+## Designsystem
+
+[`src/ui/`](src/ui/) – Tokens (`tokens.ts`: Palette hell/dunkel, Spacing, Radius,
+Typo) + `ThemeProvider`/`useTheme` + Basiskomponenten: `Text`, `Button`
+(primary/secondary/ghost, loading, disabled), `Input` (Label + Fehlertext), `Card`,
+`ListRow`, `StatusBadge` (die sieben Einreichungs-Status), `Screen` (SafeArea +
+Padding + Keyboard), `ScannerFrame`, `LoadingState` / `EmptyState` / `ErrorState`.
+
+Systemschrift; Ziel hell/clean/vertrauenswürdig. Marken-Feinschliff (Logo, exakte
+Farben, ggf. eigene Schrift) folgt mit OP-07.
+
+Alle sichtbaren Strings laufen über `t(...)` aus [`src/lib/i18n.ts`](src/lib/i18n.ts)
+(nur Deutsch im MVP). Die Route `ui-demo` zeigt alle Komponenten.
+
 ## Lizenz
 
 Proprietär – siehe [LICENSE](LICENSE). © 2026 Cash4Bricks.
