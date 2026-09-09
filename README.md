@@ -36,11 +36,20 @@ Node ≥ 20 empfohlen. Umgebungsvariablen (später) in `.env` – wird von Git i
 | `npm run typecheck`                               | `tsc --noEmit`                               |
 | `npm run lint` / `npm run lint:fix`               | ESLint (`eslint-config-expo` + Prettier-Off) |
 | `npm run format` / `npm run format:check`         | Prettier über das ganze Repo                 |
+| `npm test` / `npm run test:watch`                 | Jest (`jest-expo`) + Testing Library         |
 
 Vor jedem Commit läuft automatisch ein Husky-Pre-Commit-Hook: `lint-staged`
 (ESLint `--fix` + Prettier auf geänderte Dateien) und anschließend `npm run typecheck`.
 
-> TODO (M0): Tests (M0-007), CI (M0-006), Sentry (M0-008), EAS (M0-009)
+CI (GitHub Actions) prüft bei jedem PR: `lint`, `format:check`, `typecheck`, `test`.
+
+## Tests
+
+Jest mit dem `jest-expo`-Preset und `@testing-library/react-native`. Testdateien liegen
+neben dem Code unter `__tests__/` bzw. als `*.test.ts(x)`. `render(...)` ist asynchron –
+`await render(<Screen />)`.
+
+> TODO (M0): Sentry (M0-008), EAS (M0-009), `.env` + README-Finalisierung (M0-010)
 
 ## Projektstruktur
 
