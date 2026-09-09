@@ -5,7 +5,7 @@ Sammler reichen ihre Sets per Barcode-Scan ein und erhalten ein Angebot; intern 
 Wareneingang gegen die eingereichte Liste abgeglichen und der Deal abgeschlossen.
 
 - **Grundlage:** Cash4Bricks_Lastenheft_Pflichtenheft (aktuelle Version)
-- **Status:** in Entwicklung – Meilenstein M0 (Projekt-Setup)
+- **Status:** Meilenstein M0 – Toolchain steht, Fachfunktionen ab M1
 
 ## Tech-Stack
 
@@ -22,10 +22,11 @@ Wareneingang gegen die eingereichte Liste abgeglichen und der Deal abgeschlossen
 
 ```bash
 npm install
-npx expo start        # Dev-Server; danach i (iOS-Simulator) / a (Android-Emulator) / w (Web)
+cp .env.example .env   # Werte eintragen (siehe „Umgebungsvariablen")
+npx expo start         # Dev-Server; danach i (iOS-Simulator) / a (Android-Emulator) / w (Web)
 ```
 
-Node ≥ 20 empfohlen. Umgebungsvariablen (später) in `.env` – wird von Git ignoriert.
+Node laut `.nvmrc` (22); mindestens 20.
 
 ## Scripts
 
@@ -85,7 +86,26 @@ npx eas-cli build --profile development --platform android
 
 `eas-cli` wird per `npx` genutzt, ist bewusst **keine** Dependency (hält `npm ci` / CI schlank).
 
-> TODO (M0): `.env`-Konzept finalisieren (M0-010)
+## Umgebungsvariablen
+
+`.env` (aus `.env.example`) wird von Git ignoriert. Nur `EXPO_PUBLIC_*` landet im
+App-Bundle – **keine Geheimnisse**. Im Code wird nie direkt `process.env` gelesen,
+sondern immer das typisierte Objekt aus [`src/lib/env.ts`](src/lib/env.ts).
+
+| Variable                        | Pflicht             | Default            | Zweck                                                    |
+| ------------------------------- | ------------------- | ------------------ | -------------------------------------------------------- |
+| `EXPO_PUBLIC_API_MODE`          | –                   | `mock`             | Adapter-Modus: `mock` oder `supabase`                    |
+| `EXPO_PUBLIC_ENV`               | –                   | `development`      | logische Umgebung (`development`/`preview`/`production`) |
+| `EXPO_PUBLIC_SUPABASE_URL`      | im `supabase`-Modus | –                  | Supabase-Projekt-URL                                     |
+| `EXPO_PUBLIC_SUPABASE_ANON_KEY` | im `supabase`-Modus | –                  | öffentlicher Anon-Key (RLS schützt die Daten)            |
+| `EXPO_PUBLIC_SENTRY_DSN`        | –                   | – (Monitoring aus) | Sentry-DSN                                               |
+
+Im `supabase`-Modus ohne URL/Key bricht die App früh ab (in Dev als Fehler, sonst
+als `console.error`).
+
+**Serverseitige Geheimnisse** (`SENTRY_AUTH_TOKEN`, `SUPABASE_SERVICE_ROLE_KEY`,
+`REBRICKABLE_API_KEY`, `BRICKSET_API_KEY`, `RESEND_API_KEY`) gehören in Supabase- bzw.
+EAS-Secrets, nicht in `.env`.
 
 ## Projektstruktur
 
