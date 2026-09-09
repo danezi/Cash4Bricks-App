@@ -1,5 +1,11 @@
 import { Stack } from 'expo-router';
 
-export default function RootLayout() {
+import { initSentry, Sentry } from '@/lib/sentry';
+
+initSentry();
+
+function RootLayout() {
   return <Stack />;
 }
+
+export default Sentry.wrap(RootLayout);
