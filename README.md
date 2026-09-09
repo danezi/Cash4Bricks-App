@@ -65,7 +65,27 @@ Aktivieren:
    `SENTRY_AUTH_TOKEN` als (nicht öffentliche) Secrets setzen. Solange die fehlen, warnt
    der Config-Plugin beim Build – ohne Funktionsverlust.
 
-> TODO (M0): EAS + `eas.json` (M0-009), `.env`-Konzept finalisieren (M0-010)
+## Builds (EAS)
+
+`eas.json` definiert drei Build-Profile:
+
+| Profil        | Zweck                                                                   |
+| ------------- | ----------------------------------------------------------------------- |
+| `development` | Dev-Client-Build (`expo-dev-client`), interne Verteilung, iOS-Simulator |
+| `preview`     | interner Test-Build (Android als `.apk`), TestFlight / Play Internal    |
+| `production`  | Store-Build, `autoIncrement` der Build-Nummer                           |
+
+Einmalig einrichten (braucht Expo-Konto):
+
+```bash
+npx eas-cli login
+npx eas-cli init          # legt das EAS-Projekt an, schreibt extra.eas.projectId in app.json
+npx eas-cli build --profile development --platform android
+```
+
+`eas-cli` wird per `npx` genutzt, ist bewusst **keine** Dependency (hält `npm ci` / CI schlank).
+
+> TODO (M0): `.env`-Konzept finalisieren (M0-010)
 
 ## Projektstruktur
 
