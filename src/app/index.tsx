@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from 'react-native';
 
 export default function Index() {
   return (
@@ -12,18 +12,18 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     padding: 24,
     gap: 8,
   },
   title: {
     fontSize: 24,
-    fontWeight: "700",
+    fontWeight: '700',
   },
   subtitle: {
     fontSize: 14,
     opacity: 0.6,
-    textAlign: "center",
+    textAlign: 'center',
   },
 });

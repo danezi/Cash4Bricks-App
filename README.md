@@ -9,14 +9,14 @@ Wareneingang gegen die eingereichte Liste abgeglichen und der Deal abgeschlossen
 
 ## Tech-Stack
 
-| Bereich    | Technologie |
-|------------|-------------|
-| App        | React Native + Expo (Expo Router), TypeScript (strict) |
+| Bereich    | Technologie                                                      |
+| ---------- | ---------------------------------------------------------------- |
+| App        | React Native + Expo (Expo Router), TypeScript (strict)           |
 | Backend    | Supabase (Postgres, Auth, Storage) + Edge Functions (TypeScript) |
-| Daten      | Rebrickable (Katalog), Brickset (EAN → Set) |
-| E-Mail     | Resend |
-| CI / Build | GitHub Actions, EAS Build & Submit |
-| Monitoring | Sentry |
+| Daten      | Rebrickable (Katalog), Brickset (EAN → Set)                      |
+| E-Mail     | Resend                                                           |
+| CI / Build | GitHub Actions, EAS Build & Submit                               |
+| Monitoring | Sentry                                                           |
 
 ## Umgebung aufsetzen
 
@@ -29,14 +29,18 @@ Node ≥ 20 empfohlen. Umgebungsvariablen (später) in `.env` – wird von Git i
 
 ## Scripts
 
-| Script | Zweck |
-|--------|-------|
-| `npm start` | Expo Dev-Server |
-| `npm run android` / `npm run ios` / `npm run web` | Dev-Server direkt auf Zielplattform |
-| `npm run typecheck` | `tsc --noEmit` |
-| `npm run lint` | `expo lint` |
+| Script                                            | Zweck                                        |
+| ------------------------------------------------- | -------------------------------------------- |
+| `npm start`                                       | Expo Dev-Server                              |
+| `npm run android` / `npm run ios` / `npm run web` | Dev-Server direkt auf Zielplattform          |
+| `npm run typecheck`                               | `tsc --noEmit`                               |
+| `npm run lint` / `npm run lint:fix`               | ESLint (`eslint-config-expo` + Prettier-Off) |
+| `npm run format` / `npm run format:check`         | Prettier über das ganze Repo                 |
 
-> TODO (M0): ESLint-Config (M0-004), Tests (M0-007), CI (M0-006)
+Vor jedem Commit läuft automatisch ein Husky-Pre-Commit-Hook: `lint-staged`
+(ESLint `--fix` + Prettier auf geänderte Dateien) und anschließend `npm run typecheck`.
+
+> TODO (M0): Tests (M0-007), CI (M0-006), Sentry (M0-008), EAS (M0-009)
 
 ## Projektstruktur
 
