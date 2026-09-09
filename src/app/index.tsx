@@ -1,29 +1,16 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Card, Screen, Text } from '@/ui';
 
 export default function Index() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Cash4Bricks</Text>
-      <Text style={styles.subtitle}>Projekt-Gerüst (M0). Screens folgen ab M1.</Text>
-    </View>
+    <Screen>
+      <Text variant="title">Cash4Bricks</Text>
+      <Card>
+        <Text variant="heading">Projekt-Gerüst (M0)</Text>
+        <Text tone="muted">
+          Toolchain, API-Adapter mit Mock und das Designsystem stehen. Die eigentlichen Screens
+          kommen ab M1. Die Komponenten-Übersicht liegt unter der Route „ui-demo“.
+        </Text>
+      </Card>
+    </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 24,
-    gap: 8,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: '700',
-  },
-  subtitle: {
-    fontSize: 14,
-    opacity: 0.6,
-    textAlign: 'center',
-  },
-});
