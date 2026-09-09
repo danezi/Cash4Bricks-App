@@ -1,0 +1,12 @@
+node_modules/
+.expo/
+dist/
+web-build/
+coverage/
+android/
+ios/
+example/
+package-lock.json
+*.snap
+
+assets/expo.icon/
