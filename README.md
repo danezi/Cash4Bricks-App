@@ -49,7 +49,23 @@ Jest mit dem `jest-expo`-Preset und `@testing-library/react-native`. Testdateien
 neben dem Code unter `__tests__/` bzw. als `*.test.ts(x)`. `render(...)` ist asynchron –
 `await render(<Screen />)`.
 
-> TODO (M0): Sentry (M0-008), EAS (M0-009), `.env` + README-Finalisierung (M0-010)
+## Error-Monitoring (Sentry)
+
+`@sentry/react-native` ist eingebunden und wird in `src/app/_layout.tsx` über
+`initSentry()` gestartet. Ohne `EXPO_PUBLIC_SENTRY_DSN` ist es ein **No-op** – lokale
+Entwicklung, Tests und CI brauchen kein Sentry-Konto.
+
+Aktivieren:
+
+1. In Sentry ein Projekt (Plattform „React Native") anlegen, DSN kopieren.
+2. `.env` anlegen (siehe `.env.example`), `EXPO_PUBLIC_SENTRY_DSN=…` setzen.
+3. Testfehler auslösen, z. B. `Sentry.captureException(new Error('Sentry Test'))`, und im
+   Sentry-Dashboard prüfen, dass das Event ankommt.
+4. Für Source-Map-Upload beim EAS-Build zusätzlich `SENTRY_ORG`, `SENTRY_PROJECT`,
+   `SENTRY_AUTH_TOKEN` als (nicht öffentliche) Secrets setzen. Solange die fehlen, warnt
+   der Config-Plugin beim Build – ohne Funktionsverlust.
+
+> TODO (M0): EAS + `eas.json` (M0-009), `.env`-Konzept finalisieren (M0-010)
 
 ## Projektstruktur
 
