@@ -120,7 +120,33 @@ src/
 assets/        Icons, Splash, Bilder
 ```
 
-> `supabase/` (migrations, functions) folgt ab M0-014.
+## Datenbank (Supabase)
+
+Eigenes Projekt, Region EU (Frankfurt). Das Schema liegt als Migrationen in
+[`supabase/migrations/`](supabase/migrations/):
+
+| Migration       | Inhalt                                                                                       |
+| --------------- | -------------------------------------------------------------------------------------------- |
+| `…_schema.sql`  | Enums, acht Tabellen, `handle_new_user`-Trigger (legt `profiles` an)                         |
+| `…_rls.sql`     | `is_admin()`-Helfer, RLS auf allen Tabellen, Policies (Kunde = eigene Zeilen, Admin = alles) |
+| `…_storage.sql` | Bucket `receipts` + Storage-Policies                                                         |
+
+**Migrationen anwenden** (braucht Supabase-CLI, Personal Access Token, DB-Passwort):
+
+```bash
+export SUPABASE_ACCESS_TOKEN=sbp_…
+export SUPABASE_DB_PASSWORD='…'
+npx supabase link --project-ref <project-ref>   # einmalig
+npx supabase db push
+```
+
+Eine Person zum Admin machen (nach der ersten Anmeldung), im Supabase SQL-Editor:
+
+```sql
+update public.profiles set role = 'admin' where email = 'name@firma.de';
+```
+
+`supabase/.temp/` und `.env` sind git-ignoriert; Zugangsdaten kommen nie ins Repo.
 
 ## API-Schicht (Ports & Adapter)
 
