@@ -10,3 +10,5 @@ package-lock.json
 *.snap
 
 assets/expo.icon/
+supabase/.temp/
+supabase/.branches/
