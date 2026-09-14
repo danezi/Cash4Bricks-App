@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { Button } from '@/ui/Button';
 import { Input } from '@/ui/Input';
+import { ScannerFrame } from '@/ui/ScannerFrame';
 import { StatusBadge } from '@/ui/StatusBadge';
 
 describe('Button', () => {
@@ -31,5 +32,17 @@ describe('Input', () => {
   it('zeigt den Fehlertext an', async () => {
     await render(<Input label="Telefon" value="" onChangeText={() => {}} error="Pflichtfeld" />);
     expect(screen.getByText('Pflichtfeld')).toBeOnTheScreen();
+  });
+});
+
+describe('ScannerFrame', () => {
+  it('zeigt den Standard-Hinweistext', async () => {
+    await render(<ScannerFrame />);
+    expect(screen.getByText('Barcode des LEGO-Sets in den Rahmen halten')).toBeOnTheScreen();
+  });
+
+  it('zeigt einen eigenen Hinweistext, wenn übergeben', async () => {
+    await render(<ScannerFrame hint="Testhinweis" />);
+    expect(screen.getByText('Testhinweis')).toBeOnTheScreen();
   });
 });

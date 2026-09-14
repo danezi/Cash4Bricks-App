@@ -184,6 +184,19 @@ Farben, ggf. eigene Schrift) folgt mit OP-07.
 Alle sichtbaren Strings laufen über `t(...)` aus [`src/lib/i18n.ts`](src/lib/i18n.ts)
 (nur Deutsch im MVP). Die Route `ui-demo` zeigt alle Komponenten.
 
+## Kamera-Scan
+
+[`src/features/scan/ScanScreen.tsx`](src/features/scan/ScanScreen.tsx) — `expo-camera`,
+beschränkt auf EAN-13/EAN-8/UPC-A. Berechtigungsfluss (anfragen / verweigert →
+Einstellungen), Sperre gegen Mehrfachauslösung
+([`scanGate.ts`](src/features/scan/scanGate.ts), reine Funktion, getestet), Haptik-Feedback,
+Taschenlampen-Umschalter. Navigation kommt als `onDetected`-Prop von außen (Route
+[`src/app/(customer)/scan.tsx`](<src/app/(customer)/scan.tsx>)) — der Screen selbst kennt
+`expo-router` nicht.
+
+**Kamera-Verhalten lässt sich nicht automatisiert testen** (keine Kamera in CI/Web/iOS-
+Simulator). Zum Prüfen: `npm start`, `s` drücken (Expo Go), QR-Code auf dem Handy scannen.
+
 ## Lizenz
 
 Proprietär – siehe [LICENSE](LICENSE). © 2026 Cash4Bricks.

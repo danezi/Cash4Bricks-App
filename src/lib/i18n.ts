@@ -20,6 +20,18 @@ export const de = {
   },
   scan: {
     hint: 'Barcode des LEGO-Sets in den Rahmen halten',
+    permissionTitle: 'Kamera-Zugriff',
+    permissionBody:
+      'Wir brauchen Zugriff auf deine Kamera, um den Barcode auf der LEGO-Verpackung zu scannen.',
+    permissionCta: 'Zugriff erlauben',
+    permissionDeniedBody:
+      'Der Kamera-Zugriff wurde abgelehnt. Bitte erlaube ihn in den Einstellungen, um scannen zu können.',
+    openSettings: 'Einstellungen öffnen',
+    torchOn: 'Blitz an',
+    torchOff: 'Blitz aus',
+    unavailableTitle: 'Kamera nicht verfügbar',
+    unavailableBody:
+      'Auf diesem Gerät ist kein Scannen möglich. Du kannst Sets auch manuell hinzufügen.',
   },
   empty: {
     submissions: 'Noch keine Sammlung eingereicht',
