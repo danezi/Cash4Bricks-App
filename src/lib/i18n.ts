@@ -20,9 +20,61 @@ export const de = {
   },
   scan: {
     hint: 'Barcode des LEGO-Sets in den Rahmen halten',
+    permissionTitle: 'Kamera-Zugriff',
+    permissionBody:
+      'Wir brauchen Zugriff auf deine Kamera, um den Barcode auf der LEGO-Verpackung zu scannen.',
+    permissionCta: 'Zugriff erlauben',
+    permissionDeniedBody:
+      'Der Kamera-Zugriff wurde abgelehnt. Bitte erlaube ihn in den Einstellungen, um scannen zu können.',
+    openSettings: 'Einstellungen öffnen',
+    torchOn: 'Blitz an',
+    torchOff: 'Blitz aus',
+    unavailableTitle: 'Kamera nicht verfügbar',
+    unavailableBody:
+      'Auf diesem Gerät ist kein Scannen möglich. Du kannst Sets auch manuell hinzufügen.',
   },
   empty: {
     submissions: 'Noch keine Sammlung eingereicht',
+  },
+  home: {
+    tagline: 'Verkaufe deine ungeöffneten LEGO-Sets in wenigen Minuten.',
+    scanTitle: 'LEGO scannen',
+    scanSubtitle:
+      'Verkaufe deine LEGO-Sammlung und erhalte innerhalb von 24 Stunden ein kostenloses Angebot.',
+    scanCta: 'Scan starten',
+    dashboardTitle: 'Mein Dashboard',
+    dashboardSubtitle: 'Sieh deine Angebote, Verkäufe und bisherigen Auszahlungen.',
+    dashboardCta: 'Anmelden',
+    howItWorksTitle: 'So funktioniert es',
+    howItWorksSubtitle: 'Kurze Erklärung des Ankaufprozesses.',
+    howItWorksCta: 'Ablauf ansehen',
+  },
+  howItWorks: {
+    subtitle: 'In sechs Schritten von der Sammlung zur Auszahlung.',
+    step1Title: '1. Sets scannen',
+    step1Body:
+      'Öffne den Scanner und halte die Kamera auf den Barcode jedes LEGO-Sets. Wir erkennen das Set automatisch.',
+    step2Title: '2. Menge angeben',
+    step2Body:
+      'Jedes Set landet mit Stückzahl in deiner Liste. Scanne weitere Sets oder ändere Mengen jederzeit.',
+    step3Title: '3. Angebot anfordern',
+    step3Body: 'Trage E-Mail und Telefonnummer ein und sende deine Liste ab.',
+    step4Title: '4. Angebot erhalten',
+    step4Body: 'Innerhalb von 24 Stunden meldet sich unser Team mit deinem persönlichen Angebot.',
+    step5Title: '5. Sets einsenden',
+    step5Body:
+      'Bei Annahme schickst du deine Sammlung ein. Wir prüfen jedes Set beim Wareneingang.',
+    step6Title: '6. Auszahlung',
+    step6Body: 'Nach der Prüfung erhältst du deinen Beleg und die Auszahlung.',
+    cta: 'Jetzt scannen',
+  },
+  scanStub: {
+    title: 'Scanner folgt bald',
+    hint: 'Der Barcode-Scanner wird im nächsten Schritt gebaut (AP-1.3).',
+  },
+  dashboardStub: {
+    title: 'Dashboard folgt bald',
+    hint: 'Anmeldung und Dashboard werden in einem späteren Schritt gebaut.',
   },
 } as const;
 

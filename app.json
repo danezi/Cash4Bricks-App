@@ -34,7 +34,15 @@
           "imageWidth": 76
         }
       ],
-      "@sentry/react-native"
+      "@sentry/react-native",
+      "expo-image",
+      "expo-web-browser",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Erlaube Cash4Bricks den Kamera-Zugriff, um LEGO-Barcodes zu scannen."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

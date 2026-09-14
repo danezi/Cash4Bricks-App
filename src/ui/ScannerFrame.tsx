@@ -1,15 +1,26 @@
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { t } from '@/lib/i18n';
 import { Text } from '@/ui/Text';
 import { useTheme } from '@/ui/theme';
 
+const WINDOW_WIDTH = '78%';
+const WINDOW_ASPECT_RATIO = 1.6;
+
 /**
- * Statisches Sucher-Overlay für den Scan-Screen: abgedunkelter Rand, freies
- * Zielfenster mit Eckmarken, Hinweistext. Die Kamera selbst kommt in AP-1.3.
+ * Sucher-Overlay für den Scan-Screen: abgedunkelter Rand rund um ein echtes,
+ * durchsichtiges Zielfenster mit Eckmarken. Wird als Geschwister-Element direkt
+ * über einer `CameraView` platziert (absolut positioniert, deckungsgleich).
+ *
+ * Vier-Banden-Technik statt eines flächigen Overlays mit „transparentem" Fenster
+ * darin: Ein Kind-View mit `backgroundColor: transparent` zeigt nur, was der
+ * *eigene* Elternknoten bereits gezeichnet hat — nicht die Kamera dahinter. Nur
+ * eine echte Lücke zwischen vier separaten, abgedunkelten Flächen lässt die
+ * Kamera im Fenster sichtbar durchscheinen.
  */
 export function ScannerFrame({ hint = t('scan.hint') }: { hint?: string }) {
-  const { colors, radius, spacing } = useTheme();
+  const { colors, spacing } = useTheme();
+  const dim = { backgroundColor: '#000000AA' };
   const corner = {
     position: 'absolute' as const,
     width: 28,
@@ -19,33 +30,33 @@ export function ScannerFrame({ hint = t('scan.hint') }: { hint?: string }) {
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: '#000000AA',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: spacing.lg,
-      }}
-    >
-      <View
-        style={{
-          width: '78%',
-          aspectRatio: 1.6,
-          borderRadius: radius.md,
-          backgroundColor: 'transparent',
-        }}
-      >
-        <View style={[corner, { top: -3, left: -3, borderRightWidth: 0, borderBottomWidth: 0 }]} />
-        <View style={[corner, { top: -3, right: -3, borderLeftWidth: 0, borderBottomWidth: 0 }]} />
-        <View style={[corner, { bottom: -3, left: -3, borderRightWidth: 0, borderTopWidth: 0 }]} />
-        <View style={[corner, { bottom: -3, right: -3, borderLeftWidth: 0, borderTopWidth: 0 }]} />
+    <View style={StyleSheet.absoluteFill} pointerEvents="none">
+      <View style={[{ flex: 1 }, dim]} />
+      <View style={{ flexDirection: 'row' }}>
+        <View style={[{ flex: 1 }, dim]} />
+        <View style={{ width: WINDOW_WIDTH, aspectRatio: WINDOW_ASPECT_RATIO }}>
+          <View
+            style={[corner, { top: -3, left: -3, borderRightWidth: 0, borderBottomWidth: 0 }]}
+          />
+          <View
+            style={[corner, { top: -3, right: -3, borderLeftWidth: 0, borderBottomWidth: 0 }]}
+          />
+          <View
+            style={[corner, { bottom: -3, left: -3, borderRightWidth: 0, borderTopWidth: 0 }]}
+          />
+          <View
+            style={[corner, { bottom: -3, right: -3, borderLeftWidth: 0, borderTopWidth: 0 }]}
+          />
+        </View>
+        <View style={[{ flex: 1 }, dim]} />
       </View>
-      <Text
-        style={{ color: colors.primaryText, textAlign: 'center', paddingHorizontal: spacing.xl }}
-      >
-        {hint}
-      </Text>
+      <View style={[{ flex: 1, alignItems: 'center', paddingTop: spacing.lg }, dim]}>
+        <Text
+          style={{ color: colors.primaryText, textAlign: 'center', paddingHorizontal: spacing.xl }}
+        >
+          {hint}
+        </Text>
+      </View>
     </View>
   );
 }
