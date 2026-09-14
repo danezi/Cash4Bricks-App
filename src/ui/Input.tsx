@@ -20,6 +20,7 @@ export function Input({ label, error, onFocus, onBlur, ...rest }: InputProps) {
         {label}
       </Text>
       <TextInput
+        accessibilityLabel={label}
         placeholderTextColor={colors.textMuted}
         onFocus={(e) => {
           setFocused(true);
