@@ -5,7 +5,7 @@ Sammler reichen ihre Sets per Barcode-Scan ein und erhalten ein Angebot; intern 
 Wareneingang gegen die eingereichte Liste abgeglichen und der Deal abgeschlossen.
 
 - **Grundlage:** Cash4Bricks_Lastenheft_Pflichtenheft (aktuelle Version)
-- **Status:** Meilenstein M0 – Toolchain steht, Fachfunktionen ab M1
+- **Status:** Meilenstein M1 – erster sichtbarer Ablauf im Bau (gegen den Mock)
 
 ## Tech-Stack
 
@@ -111,14 +111,20 @@ EAS-Secrets, nicht in `.env`.
 
 ```
 src/
-  app/         Expo-Router-Screens und -Layouts (nur Screens/Layouts)
-  api/         Adapter-Schicht (Mock ↔ Supabase, per ENV umschaltbar)
-  domain/      Zod-Schemas + Typen der Kernentitäten
-  features/    fachliche Bausteine je Anwendungsfall (scan, submission, dashboard, ...)
-  ui/          Designsystem: Tokens + Basiskomponenten
-  lib/         Querschnitt: Clients, i18n, Helfer
-assets/        Icons, Splash, Bilder
+  app/               Expo-Router-Screens und -Layouts (nur Screens/Layouts)
+    (customer)/      Kunden-Bereich: Home, Scan, Liste, Dashboard, ...
+  api/               Adapter-Schicht (Mock ↔ Supabase, per ENV umschaltbar)
+  domain/            Zod-Schemas + Typen der Kernentitäten
+  features/          fachliche Bausteine je Anwendungsfall (home, scan, submission, ...)
+  ui/                Designsystem: Tokens + Basiskomponenten
+  lib/               Querschnitt: Clients, i18n, Helfer
+assets/              Icons, Splash, Bilder
 ```
+
+Screens in `src/app/` sind dünn: sie holen sich Navigation (`useRouter`) und binden die
+eigentliche, testbare Oberfläche aus `src/features/*` ein. Feature-Komponenten bekommen
+Navigation als Props (`onScanPress` etc.) statt selbst `expo-router` zu importieren — so
+sind sie ohne Router-Kontext testbar.
 
 ## Datenbank (Supabase)
 
