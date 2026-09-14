@@ -1,27 +1,34 @@
+import { useState } from 'react';
 import { Alert } from 'react-native';
 
 import { getApi } from '@/api';
 import { ScanScreen, type ScannedCode } from '@/features/scan/ScanScreen';
+import { ScanResultScreen, type ConfirmedItem } from '@/features/scan/ScanResultScreen';
 
 export default function Scan() {
-  async function handleDetected({ data }: ScannedCode) {
-    const match = await getApi().catalog.resolveBarcode(data);
+  const [ean, setEan] = useState<string | null>(null);
 
-    if (match.kind === 'unknown') {
-      Alert.alert(
-        'Nicht erkannt',
-        `EAN ${data} ist nicht bekannt. Manuelle Eingabe + „Ist das dein Set?“ folgen in AP-1.4.`,
-      );
-      return;
-    }
-
-    const confidenceNote =
-      match.kind === 'probable' ? ` · Confidence ${Math.round(match.confidence * 100)}%` : '';
+  function handleConfirm(item: ConfirmedItem) {
+    // Die echte Sammlungsliste kommt in AP-1.5. Bis dahin nur eine sichtbare
+    // Bestätigung, damit sich der ganze Ablauf schon jetzt Ende-zu-Ende prüfen lässt.
     Alert.alert(
-      match.kind === 'confirmed' ? 'Set erkannt' : 'Ist das dein Set?',
-      `${match.set.name} (${match.set.setNumber})${confidenceNote}`,
+      'Zur Liste hinzugefügt',
+      `${item.setName} (${item.setNumber}) — die echte Sammlungsliste folgt in AP-1.5.`,
+    );
+    setEan(null);
+  }
+
+  if (ean) {
+    return (
+      <ScanResultScreen
+        ean={ean}
+        resolveBarcode={(code) => getApi().catalog.resolveBarcode(code)}
+        confirmBarcode={(code, setNumber) => getApi().catalog.confirmBarcode(code, setNumber)}
+        onConfirm={handleConfirm}
+        onCancel={() => setEan(null)}
+      />
     );
   }
 
-  return <ScanScreen onDetected={handleDetected} />;
+  return <ScanScreen onDetected={(code: ScannedCode) => setEan(code.data)} />;
 }

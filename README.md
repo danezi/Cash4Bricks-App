@@ -197,6 +197,13 @@ Taschenlampen-Umschalter. Navigation kommt als `onDetected`-Prop von außen (Rou
 **Kamera-Verhalten lässt sich nicht automatisiert testen** (keine Kamera in CI/Web/iOS-
 Simulator). Zum Prüfen: `npm start`, `s` drücken (Expo Go), QR-Code auf dem Handy scannen.
 
+Nach einem Treffer übernimmt
+[`ScanResultScreen.tsx`](src/features/scan/ScanResultScreen.tsx) (AP-1.4) die Auflösung:
+bestätigter Treffer → direkt übernehmbar; unsicherer Treffer → „Ist das dein LEGO-Set?“
+mit Rückschreiben des bestätigten Barcodes; unbekannt oder abgelehnt → manuelle Eingabe
+(Setnummer + Bezeichnung). Bekommt Adapter-Zugriffe (`resolveBarcode`, `confirmBarcode`)
+als Props — dadurch ohne Kamera und ohne Mock vollständig testbar.
+
 ## Lizenz
 
 Proprietär – siehe [LICENSE](LICENSE). © 2026 Cash4Bricks.
