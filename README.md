@@ -204,6 +204,24 @@ mit Rückschreiben des bestätigten Barcodes; unbekannt oder abgelehnt → manue
 (Setnummer + Bezeichnung). Bekommt Adapter-Zugriffe (`resolveBarcode`, `confirmBarcode`)
 als Props — dadurch ohne Kamera und ohne Mock vollständig testbar.
 
+## Sammlungsliste
+
+[`src/features/submission/`](src/features/submission/) (AP-1.5):
+
+- **`collectionLogic.ts`** — reine Funktionen: Position hinzufügen, Menge ändern
+  (Untergrenze 1), entfernen, Summen bilden, per Setnummer nachschlagen (für die
+  Doppel-Scan-Rückfrage). Getestet.
+- **`CollectionContext.tsx`** — React Context um diese Logik, hält den Zustand für
+  `(customer)/scan` und `(customer)/list` gemeinsam und speichert ihn bei jeder
+  Änderung in `AsyncStorage` (übersteht App-Neustarts).
+- **`CollectionListScreen.tsx`** — Liste anzeigen, Menge ändern, Position entfernen,
+  „Weiteres Set scannen“, „Angebot anfordern“ (folgt in AP-1.6). Bekommt Daten und
+  Aktionen als Props, kennt den Context selbst nicht.
+
+Scannt man einen Barcode, der schon in der Liste steht, fragt die App „Dieses Set
+befindet sich bereits in deiner Liste. Stückzahl erhöhen?“, statt eine zweite Position
+anzulegen.
+
 ## Lizenz
 
 Proprietär – siehe [LICENSE](LICENSE). © 2026 Cash4Bricks.
