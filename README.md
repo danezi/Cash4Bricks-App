@@ -248,6 +248,13 @@ Eigenständig-vs-Bestandssystem-Integration. Die Portschnittstelle
 (`NotificationPort.sendSubmissionReceived`) steht bereits, sodass das Nachrüsten nur
 ein Adapter-Tausch ist, kein Umbau der App.
 
+## Testprotokoll
+
+[`docs/testprotokoll-m1.md`](docs/testprotokoll-m1.md) (AP-1.8) hält fest, welche
+LF-C-Anforderungen des Kundenflusses automatisiert getestet bzw. manuell auf einem
+Gerät verifiziert sind, sowie den Stand von EK-01/EK-02 und die bekannten Lücken.
+Wird bei jedem weiteren M1-Merge nachgeführt.
+
 ## Lizenz
 
 Proprietär – siehe [LICENSE](LICENSE). © 2026 Cash4Bricks.
