@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
-import type { BarcodeMatch } from '@/domain';
-import { Button, Card, Input, LoadingState, Screen, Text } from '@/ui';
+import type { BarcodeMatch, CatalogSet } from '@/domain';
+import { Button, Card, Input, ListRow, LoadingState, Screen, Text } from '@/ui';
 
 export interface ConfirmedItem {
   setNumber: string;
@@ -13,9 +13,13 @@ export interface ScanResultScreenProps {
   ean: string;
   resolveBarcode: (ean: string) => Promise<BarcodeMatch>;
   confirmBarcode: (ean: string, setNumber: string) => Promise<void>;
+  searchSets: (query: string) => Promise<CatalogSet[]>;
   onConfirm: (item: ConfirmedItem) => void;
   onCancel: () => void;
 }
+
+const SEARCH_MIN_LENGTH = 2;
+const SEARCH_DEBOUNCE_MS = 300;
 
 type Mode = 'loading' | 'confirmed' | 'probable' | 'unknown' | 'manual';
 
@@ -29,6 +33,7 @@ export function ScanResultScreen({
   ean,
   resolveBarcode,
   confirmBarcode,
+  searchSets,
   onConfirm,
   onCancel,
 }: ScanResultScreenProps) {
@@ -36,6 +41,35 @@ export function ScanResultScreen({
   const [match, setMatch] = useState<BarcodeMatch | null>(null);
   const [manualNumber, setManualNumber] = useState('');
   const [manualName, setManualName] = useState('');
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState<CatalogSet[]>([]);
+  const [searching, setSearching] = useState(false);
+
+  const trimmedQuery = query.trim();
+
+  useEffect(() => {
+    if (trimmedQuery.length < SEARCH_MIN_LENGTH) {
+      return;
+    }
+    let cancelled = false;
+    const timer = setTimeout(() => {
+      setSearching(true);
+      searchSets(trimmedQuery).then((sets) => {
+        if (cancelled) return;
+        setResults(sets);
+        setSearching(false);
+      });
+    }, SEARCH_DEBOUNCE_MS);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [trimmedQuery, searchSets]);
+
+  const showResults = trimmedQuery.length >= SEARCH_MIN_LENGTH ? results : [];
+  const showSearching = trimmedQuery.length >= SEARCH_MIN_LENGTH && searching;
+  const showNoResults =
+    !showSearching && trimmedQuery.length >= SEARCH_MIN_LENGTH && showResults.length === 0;
 
   useEffect(() => {
     let cancelled = false;
@@ -62,6 +96,10 @@ export function ScanResultScreen({
     const setName = manualName.trim();
     if (!setNumber || !setName) return;
     onConfirm({ setNumber, setName, source: 'manual' });
+  }
+
+  function handlePickSearchResult(set: CatalogSet) {
+    onConfirm({ setNumber: set.setNumber, setName: set.name, source: 'manual' });
   }
 
   if (mode === 'loading') {
@@ -121,6 +159,26 @@ export function ScanResultScreen({
           Der Barcode {ean} ist uns nicht bekannt. Trag das Set von Hand ein.
         </Text>
       ) : null}
+
+      <Input
+        label="Set suchen"
+        value={query}
+        onChangeText={setQuery}
+        placeholder="Name oder Setnummer"
+      />
+      {showSearching ? <Text tone="muted">Suche läuft…</Text> : null}
+      {showResults.map((set) => (
+        <ListRow
+          key={set.setNumber}
+          title={set.name}
+          subtitle={set.setNumber}
+          onPress={() => handlePickSearchResult(set)}
+        />
+      ))}
+      {showNoResults ? (
+        <Text tone="muted">Keine Treffer für „{trimmedQuery}“. Trag das Set von Hand ein:</Text>
+      ) : null}
+
       <Input
         label="Setnummer"
         value={manualNumber}

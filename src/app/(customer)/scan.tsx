@@ -42,6 +42,7 @@ export default function Scan() {
         ean={ean}
         resolveBarcode={(code) => getApi().catalog.resolveBarcode(code)}
         confirmBarcode={(code, setNumber) => getApi().catalog.confirmBarcode(code, setNumber)}
+        searchSets={(query) => getApi().catalog.searchSets(query)}
         onConfirm={handleConfirm}
         onCancel={() => setEan(null)}
       />

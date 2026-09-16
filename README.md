@@ -200,9 +200,17 @@ Simulator). Zum Prüfen: `npm start`, `s` drücken (Expo Go), QR-Code auf dem Ha
 Nach einem Treffer übernimmt
 [`ScanResultScreen.tsx`](src/features/scan/ScanResultScreen.tsx) (AP-1.4) die Auflösung:
 bestätigter Treffer → direkt übernehmbar; unsicherer Treffer → „Ist das dein LEGO-Set?“
-mit Rückschreiben des bestätigten Barcodes; unbekannt oder abgelehnt → manuelle Eingabe
-(Setnummer + Bezeichnung). Bekommt Adapter-Zugriffe (`resolveBarcode`, `confirmBarcode`)
-als Props — dadurch ohne Kamera und ohne Mock vollständig testbar.
+mit Rückschreiben des bestätigten Barcodes; unbekannt oder abgelehnt → manuelle Eingabe.
+Bekommt Adapter-Zugriffe (`resolveBarcode`, `confirmBarcode`, `searchSets`) als Props —
+dadurch ohne Kamera und ohne Mock vollständig testbar.
+
+**Set-Suche in der manuellen Eingabe (AP-1.2, Teil 1):** Statt blind Setnummer und
+Bezeichnung einzutippen, kann man ab 2 Zeichen nach Name oder Setnummer suchen
+(`catalog.searchSets`, 300ms Debounce) und einen Treffer per Tippen direkt übernehmen.
+Findet die Suche nichts, bleiben die Freitextfelder als Fallback bestehen. Läuft schon
+gegen `catalog.searchSets`, das aktuell noch den Mock-Katalog (20 Test-Sets) durchsucht —
+der Wechsel auf den echten Rebrickable-Katalogspiegel ist später ein Adapter-Tausch,
+keine UI-Änderung.
 
 ## Sammlungsliste
 
