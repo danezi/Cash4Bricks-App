@@ -215,12 +215,25 @@ als Props — dadurch ohne Kamera und ohne Mock vollständig testbar.
   `(customer)/scan` und `(customer)/list` gemeinsam und speichert ihn bei jeder
   Änderung in `AsyncStorage` (übersteht App-Neustarts).
 - **`CollectionListScreen.tsx`** — Liste anzeigen, Menge ändern, Position entfernen,
-  „Weiteres Set scannen“, „Angebot anfordern“ (folgt in AP-1.6). Bekommt Daten und
-  Aktionen als Props, kennt den Context selbst nicht.
+  „Weiteres Set scannen“, „Angebot anfordern“. Bekommt Daten und Aktionen als Props,
+  kennt den Context selbst nicht.
+- **`ContactScreen.tsx`** (AP-1.6) — Kontaktformular (E-Mail, Telefon) mit
+  [React Hook Form](https://react-hook-form.com/) + Zod-Validierung
+  (`contactInfoSchema` in [`src/domain/types.ts`](src/domain/types.ts)). Bekommt
+  Summen und eine `onSubmit`-Aktion als Props, kennt weder `CollectionContext` noch
+  `getApi()`.
 
 Scannt man einen Barcode, der schon in der Liste steht, fragt die App „Dieses Set
 befindet sich bereits in deiner Liste. Stückzahl erhöhen?“, statt eine zweite Position
 anzulegen.
+
+„Angebot anfordern“ führt zu `(customer)/contact.tsx`: dort werden Kontaktdaten und
+Sammlung zu einer `SubmissionInput` zusammengeführt und per
+`getApi().submissions.createSubmission(...)` eingereicht. Bei Erfolg wird die Sammlung
+geleert und die im Lastenheft vorgegebene Bestätigung angezeigt („Vielen Dank! Wir
+prüfen deine LEGO-Sammlung innerhalb von 24 Stunden und melden uns mit deinem
+persönlichen Angebot.“) — ein eigener Bestätigungsbildschirm mit automatischer
+E-Mail (Resend) folgt in AP-1.7.
 
 ## Lizenz
 

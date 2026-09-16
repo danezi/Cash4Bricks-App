@@ -70,6 +70,13 @@ export const submissionInputSchema = z.object({
 });
 export type SubmissionInput = z.infer<typeof submissionInputSchema>;
 
+/** Nur die Kontaktfelder — für das Kontaktformular (AP-1.6), vor dem Zusammenbau der vollen Einreichung. */
+export const contactInfoSchema = submissionInputSchema.pick({
+  contactEmail: true,
+  contactPhone: true,
+});
+export type ContactInfo = z.infer<typeof contactInfoSchema>;
+
 export const submissionItemSchema = z.object({
   id: z.string(),
   setNumber: z.string(),
