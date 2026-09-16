@@ -222,6 +222,10 @@ als Props — dadurch ohne Kamera und ohne Mock vollständig testbar.
   (`contactInfoSchema` in [`src/domain/types.ts`](src/domain/types.ts)). Bekommt
   Summen und eine `onSubmit`-Aktion als Props, kennt weder `CollectionContext` noch
   `getApi()`.
+- **`ConfirmationScreen.tsx`** (AP-1.7) — eigener Bestätigungsbildschirm (kein
+  Pop-up) nach erfolgreichem „Angebot anfordern“, mit dem im Lastenheft
+  vorgegebenen Text. Zurück-Button (Header) ist deaktiviert, da es kein Zurück zum
+  bereits abgeschickten Formular gibt.
 
 Scannt man einen Barcode, der schon in der Liste steht, fragt die App „Dieses Set
 befindet sich bereits in deiner Liste. Stückzahl erhöhen?“, statt eine zweite Position
@@ -229,11 +233,20 @@ anzulegen.
 
 „Angebot anfordern“ führt zu `(customer)/contact.tsx`: dort werden Kontaktdaten und
 Sammlung zu einer `SubmissionInput` zusammengeführt und per
-`getApi().submissions.createSubmission(...)` eingereicht. Bei Erfolg wird die Sammlung
-geleert und die im Lastenheft vorgegebene Bestätigung angezeigt („Vielen Dank! Wir
-prüfen deine LEGO-Sammlung innerhalb von 24 Stunden und melden uns mit deinem
-persönlichen Angebot.“) — ein eigener Bestätigungsbildschirm mit automatischer
-E-Mail (Resend) folgt in AP-1.7.
+`getApi().submissions.createSubmission(...)` eingereicht. Bei Erfolg wird zusätzlich
+`notifications.sendSubmissionReceived(id)` aufgerufen (Fehler dabei blockieren den
+Erfolgspfad nicht — Nice-to-have, wie beim Scan-Haptik-Feedback), die Sammlung
+geleert und zu `(customer)/confirmation.tsx` navigiert.
+
+**Offen (AP-1.7, Auto-E-Mail):** `notifications.sendSubmissionReceived` ist im Mock
+ein No-op. Die echte Auto-E-Mail über Resend (Supabase Edge Function
+`email-trigger`) ist bewusst noch nicht gebaut — dafür wird ein Resend-Account/API-Key
+benötigt, und laut Umsetzungsplan soll dafür der **bestehende** Resend-Dienst aus
+`lego-checker-api`/`brick-cash-flow` wiederverwendet werden (NF-10), nicht neu
+aufgesetzt werden. Das hängt an der noch offenen Grundsatzfrage
+Eigenständig-vs-Bestandssystem-Integration. Die Portschnittstelle
+(`NotificationPort.sendSubmissionReceived`) steht bereits, sodass das Nachrüsten nur
+ein Adapter-Tausch ist, kein Umbau der App.
 
 ## Lizenz
 

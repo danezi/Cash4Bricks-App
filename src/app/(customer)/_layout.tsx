@@ -22,6 +22,10 @@ export default function CustomerLayout() {
         <Stack.Screen name="scan" options={{ title: 'LEGO scannen' }} />
         <Stack.Screen name="list" options={{ title: 'Deine Sammlung' }} />
         <Stack.Screen name="contact" options={{ title: 'Kontaktdaten' }} />
+        <Stack.Screen
+          name="confirmation"
+          options={{ title: 'Angefragt', headerBackVisible: false, gestureEnabled: false }}
+        />
         <Stack.Screen name="dashboard" options={{ title: 'Mein Dashboard' }} />
       </Stack>
     </CollectionProvider>

@@ -15,7 +15,8 @@ export default function Contact() {
   async function handleSubmit(contact: ContactInfo) {
     setSubmitting(true);
     try {
-      await getApi().submissions.createSubmission({
+      const api = getApi();
+      const id = await api.submissions.createSubmission({
         ...contact,
         items: collection.items.map(({ setNumber, setName, qty, source }) => ({
           setNumber,
@@ -24,12 +25,11 @@ export default function Contact() {
           source,
         })),
       });
+      await api.notifications.sendSubmissionReceived(id).catch(() => {
+        // Bestätigungs-E-Mail ist ein Nice-to-have, darf den Erfolgspfad nicht blockieren.
+      });
       collection.clear();
-      Alert.alert(
-        'Anfrage gesendet',
-        'Vielen Dank! Wir prüfen deine LEGO-Sammlung innerhalb von 24 Stunden und melden uns mit deinem persönlichen Angebot.',
-        [{ text: 'OK', onPress: () => router.replace('/') }],
-      );
+      router.replace({ pathname: '/confirmation', params: { email: contact.contactEmail } });
     } catch {
       Alert.alert(
         'Das hat nicht geklappt',
