@@ -12,12 +12,22 @@ const SET: CatalogSet = {
   imageUrl: null,
 };
 
+const FERRARI_SET: CatalogSet = {
+  setNumber: '42143',
+  name: 'Ferrari Daytona SP3',
+  year: 2022,
+  theme: 'Technic',
+  parts: 3778,
+  imageUrl: null,
+};
+
 function setup(match: BarcodeMatch) {
   const resolveBarcode = jest.fn().mockResolvedValue(match);
   const confirmBarcode = jest.fn().mockResolvedValue(undefined);
+  const searchSets = jest.fn().mockResolvedValue([]);
   const onConfirm = jest.fn();
   const onCancel = jest.fn();
-  return { resolveBarcode, confirmBarcode, onConfirm, onCancel };
+  return { resolveBarcode, confirmBarcode, searchSets, onConfirm, onCancel };
 }
 
 describe('ScanResultScreen – bestätigter Treffer', () => {
@@ -28,6 +38,7 @@ describe('ScanResultScreen – bestätigter Treffer', () => {
         ean="5702017155821"
         resolveBarcode={deps.resolveBarcode}
         confirmBarcode={deps.confirmBarcode}
+        searchSets={deps.searchSets}
         onConfirm={deps.onConfirm}
         onCancel={deps.onCancel}
       />,
@@ -53,6 +64,7 @@ describe('ScanResultScreen – unsicherer Treffer', () => {
         ean="5702016909999"
         resolveBarcode={deps.resolveBarcode}
         confirmBarcode={deps.confirmBarcode}
+        searchSets={deps.searchSets}
         onConfirm={deps.onConfirm}
         onCancel={deps.onCancel}
       />,
@@ -78,6 +90,7 @@ describe('ScanResultScreen – unsicherer Treffer', () => {
         ean="5702016909999"
         resolveBarcode={deps.resolveBarcode}
         confirmBarcode={deps.confirmBarcode}
+        searchSets={deps.searchSets}
         onConfirm={deps.onConfirm}
         onCancel={deps.onCancel}
       />,
@@ -98,6 +111,7 @@ describe('ScanResultScreen – unbekannter Barcode', () => {
         ean="0000000000000"
         resolveBarcode={deps.resolveBarcode}
         confirmBarcode={deps.confirmBarcode}
+        searchSets={deps.searchSets}
         onConfirm={deps.onConfirm}
         onCancel={deps.onCancel}
       />,
@@ -114,6 +128,7 @@ describe('ScanResultScreen – unbekannter Barcode', () => {
         ean="0000000000000"
         resolveBarcode={deps.resolveBarcode}
         confirmBarcode={deps.confirmBarcode}
+        searchSets={deps.searchSets}
         onConfirm={deps.onConfirm}
         onCancel={deps.onCancel}
       />,
@@ -132,5 +147,75 @@ describe('ScanResultScreen – unbekannter Barcode', () => {
       setName: 'Ferrari Daytona SP3',
       source: 'manual',
     });
+  });
+});
+
+describe('ScanResultScreen – Set-Suche in der manuellen Eingabe', () => {
+  it('sucht erst ab 2 Zeichen und zeigt Treffer an', async () => {
+    const deps = setup({ kind: 'unknown', ean: '0000000000000' });
+    deps.searchSets.mockResolvedValue([FERRARI_SET]);
+    await render(
+      <ScanResultScreen
+        ean="0000000000000"
+        resolveBarcode={deps.resolveBarcode}
+        confirmBarcode={deps.confirmBarcode}
+        searchSets={deps.searchSets}
+        onConfirm={deps.onConfirm}
+        onCancel={deps.onCancel}
+      />,
+    );
+
+    await waitFor(() => expect(screen.getByText('Set manuell hinzufügen')).toBeOnTheScreen());
+    await fireEvent.changeText(screen.getByLabelText('Set suchen'), 'F');
+    expect(deps.searchSets).not.toHaveBeenCalled();
+
+    await fireEvent.changeText(screen.getByLabelText('Set suchen'), 'Ferrari');
+    await waitFor(() => expect(deps.searchSets).toHaveBeenCalledWith('Ferrari'));
+    await waitFor(() => expect(screen.getByText('Ferrari Daytona SP3')).toBeOnTheScreen());
+  });
+
+  it('fügt einen Suchtreffer per Tippen direkt hinzu', async () => {
+    const deps = setup({ kind: 'unknown', ean: '0000000000000' });
+    deps.searchSets.mockResolvedValue([FERRARI_SET]);
+    await render(
+      <ScanResultScreen
+        ean="0000000000000"
+        resolveBarcode={deps.resolveBarcode}
+        confirmBarcode={deps.confirmBarcode}
+        searchSets={deps.searchSets}
+        onConfirm={deps.onConfirm}
+        onCancel={deps.onCancel}
+      />,
+    );
+
+    await waitFor(() => expect(screen.getByText('Set manuell hinzufügen')).toBeOnTheScreen());
+    await fireEvent.changeText(screen.getByLabelText('Set suchen'), 'Ferrari');
+    await waitFor(() => expect(screen.getByText('Ferrari Daytona SP3')).toBeOnTheScreen());
+    await fireEvent.press(screen.getByText('Ferrari Daytona SP3'));
+
+    expect(deps.onConfirm).toHaveBeenCalledWith({
+      setNumber: '42143',
+      setName: 'Ferrari Daytona SP3',
+      source: 'manual',
+    });
+  });
+
+  it('zeigt einen Hinweis, wenn die Suche keine Treffer liefert', async () => {
+    const deps = setup({ kind: 'unknown', ean: '0000000000000' });
+    await render(
+      <ScanResultScreen
+        ean="0000000000000"
+        resolveBarcode={deps.resolveBarcode}
+        confirmBarcode={deps.confirmBarcode}
+        searchSets={deps.searchSets}
+        onConfirm={deps.onConfirm}
+        onCancel={deps.onCancel}
+      />,
+    );
+
+    await waitFor(() => expect(screen.getByText('Set manuell hinzufügen')).toBeOnTheScreen());
+    await fireEvent.changeText(screen.getByLabelText('Set suchen'), 'xyz-nichts');
+    await waitFor(() => expect(deps.searchSets).toHaveBeenCalledWith('xyz-nichts'));
+    await waitFor(() => expect(screen.getByText(/Keine Treffer/)).toBeOnTheScreen());
   });
 });
