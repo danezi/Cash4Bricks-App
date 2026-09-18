@@ -1,6 +1,10 @@
 import { View } from 'react-native';
 
-import type { CollectionItem, CollectionTotals } from '@/features/submission/collectionLogic';
+import {
+  MIN_QTY,
+  type CollectionItem,
+  type CollectionTotals,
+} from '@/features/submission/collectionLogic';
 import { Button, Card, EmptyState, Screen, Text, useTheme } from '@/ui';
 
 export interface CollectionListScreenProps {
@@ -59,7 +63,12 @@ export function CollectionListScreen({
             style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.md }}>
-              <Button label="−" variant="secondary" onPress={() => onDecrement(item.id)} />
+              <Button
+                label="−"
+                variant="secondary"
+                disabled={item.qty <= MIN_QTY}
+                onPress={() => onDecrement(item.id)}
+              />
               <Text variant="bodyStrong">{item.qty}</Text>
               <Button label="+" variant="secondary" onPress={() => onIncrement(item.id)} />
             </View>

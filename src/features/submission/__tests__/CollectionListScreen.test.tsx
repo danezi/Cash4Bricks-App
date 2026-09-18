@@ -45,11 +45,20 @@ describe('CollectionListScreen – mit Positionen', () => {
     await fireEvent.press(screen.getAllByText('+')[0]);
     expect(props.onIncrement).toHaveBeenCalledWith('i1');
 
-    await fireEvent.press(screen.getAllByText('−')[1]);
-    expect(props.onDecrement).toHaveBeenCalledWith('i2');
+    // i1 hat qty 2, das Minus-Feld ist dort nicht gesperrt.
+    await fireEvent.press(screen.getAllByText('−')[0]);
+    expect(props.onDecrement).toHaveBeenCalledWith('i1');
 
     await fireEvent.press(screen.getAllByText('Entfernen')[1]);
     expect(props.onRemove).toHaveBeenCalledWith('i2');
+  });
+
+  it('sperrt die Mengen-Verringerung bei Stückzahl 1', async () => {
+    const props = setup(ITEMS); // i2 hat qty 1
+    await render(<CollectionListScreen {...props} />);
+
+    await fireEvent.press(screen.getAllByText('−')[1]);
+    expect(props.onDecrement).not.toHaveBeenCalled();
   });
 
   it('löst Angebot anfordern und weiteres Set scannen aus', async () => {
