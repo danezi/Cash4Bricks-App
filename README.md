@@ -131,11 +131,12 @@ sind sie ohne Router-Kontext testbar.
 Eigenes Projekt, Region EU (Frankfurt). Das Schema liegt als Migrationen in
 [`supabase/migrations/`](supabase/migrations/):
 
-| Migration       | Inhalt                                                                                       |
-| --------------- | -------------------------------------------------------------------------------------------- |
-| `…_schema.sql`  | Enums, acht Tabellen, `handle_new_user`-Trigger (legt `profiles` an)                         |
-| `…_rls.sql`     | `is_admin()`-Helfer, RLS auf allen Tabellen, Policies (Kunde = eigene Zeilen, Admin = alles) |
-| `…_storage.sql` | Bucket `receipts` + Storage-Policies                                                         |
+| Migration                 | Inhalt                                                                                       |
+| ------------------------- | -------------------------------------------------------------------------------------------- |
+| `…_schema.sql`            | Enums, acht Tabellen, `handle_new_user`-Trigger (legt `profiles` an)                         |
+| `…_rls.sql`               | `is_admin()`-Helfer, RLS auf allen Tabellen, Policies (Kunde = eigene Zeilen, Admin = alles) |
+| `…_storage.sql`           | Bucket `receipts` + Storage-Policies                                                         |
+| `…_catalog_anon_read.sql` | `catalog_sets` auch für `anon` lesbar (M1 hat noch kein Login, s. unten)                     |
 
 **Migrationen anwenden** (braucht Supabase-CLI, Personal Access Token, DB-Passwort):
 
@@ -151,6 +152,12 @@ Eine Person zum Admin machen (nach der ersten Anmeldung), im Supabase SQL-Editor
 ```sql
 update public.profiles set role = 'admin' where email = 'name@firma.de';
 ```
+
+**`catalog_sets` ist für `anon` lesbar, nicht nur `authenticated`:** M1 (Scan + Set-Suche,
+AP-1.2) läuft bewusst ohne Login — Auth kommt erst in M2. `catalog_barcodes` bleibt
+unverändert `authenticated`-only, da die Barcode-Auflösung laut Plan über eine Edge
+Function mit `service_role`-Key läuft (RLS-Umgehung ohnehin), der Client liest diese
+Tabelle nie direkt.
 
 `supabase/.temp/` und `.env` sind git-ignoriert; Zugangsdaten kommen nie ins Repo.
 
