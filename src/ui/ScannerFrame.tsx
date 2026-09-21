@@ -18,14 +18,21 @@ const WINDOW_ASPECT_RATIO = 1.6;
  * eine echte Lücke zwischen vier separaten, abgedunkelten Flächen lässt die
  * Kamera im Fenster sichtbar durchscheinen.
  */
+// Das Overlay liegt über der Kamera, nicht über dem App-Hintergrund — es bleibt
+// deshalb bewusst fest dunkel/hell in beiden Farbschemata (kein `colors.*`, das
+// würde im Dark Mode z. B. `primaryText` auf Fast-Schwarz drehen und Markierungen
+// samt Hinweistext auf dem schwarzen Rand unsichtbar machen).
+const OVERLAY_DIM_COLOR = '#000000AA';
+const OVERLAY_FOREGROUND = '#FFFFFF';
+
 export function ScannerFrame({ hint = t('scan.hint') }: { hint?: string }) {
-  const { colors, spacing } = useTheme();
-  const dim = { backgroundColor: '#000000AA' };
+  const { spacing } = useTheme();
+  const dim = { backgroundColor: OVERLAY_DIM_COLOR };
   const corner = {
     position: 'absolute' as const,
     width: 28,
     height: 28,
-    borderColor: colors.primaryText,
+    borderColor: OVERLAY_FOREGROUND,
     borderWidth: 3,
   };
 
@@ -52,7 +59,7 @@ export function ScannerFrame({ hint = t('scan.hint') }: { hint?: string }) {
       </View>
       <View style={[{ flex: 1, alignItems: 'center', paddingTop: spacing.lg }, dim]}>
         <Text
-          style={{ color: colors.primaryText, textAlign: 'center', paddingHorizontal: spacing.xl }}
+          style={{ color: OVERLAY_FOREGROUND, textAlign: 'center', paddingHorizontal: spacing.xl }}
         >
           {hint}
         </Text>
