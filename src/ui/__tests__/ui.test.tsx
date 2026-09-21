@@ -45,4 +45,15 @@ describe('ScannerFrame', () => {
     await render(<ScannerFrame hint="Testhinweis" />);
     expect(screen.getByText('Testhinweis')).toBeOnTheScreen();
   });
+
+  it('zeigt den Hinweistext immer in Weiß, unabhängig vom Farbschema', async () => {
+    // Regression: der abgedunkelte Kamera-Rand ist fest schwarz, unabhängig vom
+    // Theme — Text/Eckmarken müssen deshalb ebenso fest hell bleiben, statt
+    // `colors.primaryText` zu nutzen (das im Dark Mode fast schwarz wird und auf
+    // dem schwarzen Rand unsichtbar wäre).
+    await render(<ScannerFrame />);
+    expect(screen.getByText('Barcode des LEGO-Sets in den Rahmen halten')).toHaveStyle({
+      color: '#FFFFFF',
+    });
+  });
 });
