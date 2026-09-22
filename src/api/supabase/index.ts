@@ -38,8 +38,5 @@ export function createSupabaseApi(): Api {
       sendSubmissionReceived: notReady,
       sendDealClosed: notReady,
     },
-    scanner: {
-      isSupported: () => false,
-    },
   };
 }

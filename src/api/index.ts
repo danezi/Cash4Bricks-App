@@ -10,7 +10,6 @@ export type {
   GoodsReceiptPort,
   AuthPort,
   NotificationPort,
-  ScannerPort,
 } from '@/api/types';
 
 let instance: Api | null = null;

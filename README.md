@@ -164,10 +164,9 @@ Tabelle nie direkt.
 ## API-Schicht (Ports & Adapter)
 
 Screens sprechen das Backend nie direkt an, sondern über `getApi()` aus
-[`src/api/`](src/api/). `src/api/types.ts` definiert sechs rollenreine Ports
+[`src/api/`](src/api/). `src/api/types.ts` definiert fünf rollenreine Ports
 (`CatalogPort`, `SubmissionPort`, `GoodsReceiptPort`, `AuthPort`,
-`NotificationPort`, `ScannerPort`). `EXPO_PUBLIC_API_MODE` wählt die
-Implementierung:
+`NotificationPort`). `EXPO_PUBLIC_API_MODE` wählt die Implementierung:
 
 - **`mock`** (Default) – vollständig in-memory, aus Fixtures gespeist
   ([`src/api/mock/`](src/api/mock/)); deterministisch, für Entwicklung und Tests.

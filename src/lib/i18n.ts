@@ -29,9 +29,6 @@ export const de = {
     openSettings: 'Einstellungen öffnen',
     torchOn: 'Blitz an',
     torchOff: 'Blitz aus',
-    unavailableTitle: 'Kamera nicht verfügbar',
-    unavailableBody:
-      'Auf diesem Gerät ist kein Scannen möglich. Du kannst Sets auch manuell hinzufügen.',
   },
   empty: {
     submissions: 'Noch keine Sammlung eingereicht',

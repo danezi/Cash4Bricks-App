@@ -237,12 +237,6 @@ export function createMockApi(): Api {
         /* im Mock ohne Wirkung */
       },
     },
-
-    scanner: {
-      isSupported() {
-        return false;
-      },
-    },
   };
 
   function seedExampleSubmission(): void {
