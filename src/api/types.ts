@@ -54,11 +54,6 @@ export interface NotificationPort {
   sendDealClosed(id: SubmissionId): Promise<void>;
 }
 
-export interface ScannerPort {
-  /** Ob auf diesem Gerät gescannt werden kann (Kamera + Berechtigung). */
-  isSupported(): boolean;
-}
-
 /** Gebündelter Zugriff auf alle Ports. Screens holen sich hieraus nur, was sie brauchen. */
 export interface Api {
   catalog: CatalogPort;
@@ -66,5 +61,4 @@ export interface Api {
   goodsReceipt: GoodsReceiptPort;
   auth: AuthPort;
   notifications: NotificationPort;
-  scanner: ScannerPort;
 }
