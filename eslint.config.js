@@ -15,6 +15,10 @@ module.exports = defineConfig([
       'android/*',
       'ios/*',
       'example/*',
+      // Deno-Laufzeit (Supabase Edge Functions): eigenes Modulsystem (URL-/
+      // jsr:-Imports, `Deno`-Globals) — nicht mit dem Node/RN-Regelwerk
+      // auflösbar. mapping.ts & Tests bleiben regulär gelintet (portables TS).
+      'supabase/functions/*/index.ts',
     ],
   },
   {
