@@ -198,7 +198,13 @@ Screens sprechen das Backend nie direkt an, sondern über `getApi()` aus
 
 - **`mock`** (Default) – vollständig in-memory, aus Fixtures gespeist
   ([`src/api/mock/`](src/api/mock/)); deterministisch, für Entwicklung und Tests.
-- **`supabase`** – noch Platzhalter, wird ab AP-0.2 implementiert.
+- **`supabase`** – [`src/api/supabase/`](src/api/supabase/), größtenteils noch Platzhalter
+  (ab M2). `catalog.searchSets` ist bereits real implementiert (AP-1.2): zwei
+  `ilike`-Abfragen gegen `catalog_sets` (Name, Setnummer), client-seitig dedupliziert
+  statt eines `.or(...)`-Filterstrings (PostgRESTs `or`-Syntax bräuchte eigenes
+  Escaping für Kommas/Klammern in Nutzereingaben — unnötig fehleranfällig). Nutzt
+  [`src/lib/supabaseClient.ts`](src/lib/supabaseClient.ts) (`@supabase/supabase-js`,
+  Session-Persistenz über `AsyncStorage` — für M2/Auth vorbereitet, in M1 ungenutzt).
 
 Die fachlichen Typen und die reinen Geld-Pfad-Funktionen liegen framework-frei in
 [`src/domain/`](src/domain/) (Zod-Schemas, `z.infer`-Typen, `estimatedTotal` /
