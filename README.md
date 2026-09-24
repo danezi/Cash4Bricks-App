@@ -161,6 +161,34 @@ Tabelle nie direkt.
 
 `supabase/.temp/` und `.env` sind git-ignoriert; Zugangsdaten kommen nie ins Repo.
 
+## Katalog-Sync (Edge Function, AP-1.2)
+
+[`supabase/functions/catalog-sync/`](supabase/functions/catalog-sync/) spiegelt Rebrickables
+öffentlichen Bulk-CSV-Export (`sets.csv.gz`, `themes.csv.gz`) nach `catalog_sets`.
+
+- **`mapping.ts`** — reine Abbildungslogik (Rebrickable-Zeile → `catalog_sets`-Zeile),
+  kein Deno-Code, dadurch normal mit Jest testbar
+  ([`__tests__/mapping.test.ts`](supabase/functions/catalog-sync/__tests__/mapping.test.ts)).
+  Nur Primärvarianten (`-1`-Suffix) mit reiner Ziffern-Setnummer werden übernommen —
+  Rebrickables Export enthält auch Ersatzteile/Sonderartikel mit untypischen IDs.
+- **`index.ts`** — Deno-Handler: Download + Entpacken (`DecompressionStream('gzip')`),
+  CSV-Parsing (`jsr:@std/csv`), gebatchter Upsert via `service_role`-Client. Bewusst
+  von `tsc`/ESLint der App ausgenommen (`supabase/functions/*/index.ts` in
+  `tsconfig.json` bzw. `eslint.config.js`) — eigenes Modulsystem (URL-/`jsr:`-Imports,
+  `Deno`-Globals), nicht mit dem Node/RN-Regelwerk der App auflösbar.
+
+**Braucht keinen Rebrickable-API-Key:** Der CSV-Bulk-Export ist ohne Login abrufbar
+(mit `curl` verifiziert). Ein Key ist nur für Rebrickables _Live-API_ nötig, die diese
+Funktion nicht nutzt — trotzdem sollte laut Feinplan (M1-011) ein Account angelegt und
+die Rebrickable-ToS (Attribution) gelesen werden, bevor das produktiv läuft.
+
+**Noch nicht deployed:** `supabase functions deploy catalog-sync` und das Secret
+`CATALOG_SYNC_TOKEN` (`supabase secrets set`, beliebiger langer Zufallswert — schützt
+den Endpunkt davor, dass jeder mit dem öffentlichen anon-Key den Sync auslöst) stehen
+noch aus. `SUPABASE_URL`/`SUPABASE_SERVICE_ROLE_KEY` stellt Supabase jeder Edge
+Function automatisch bereit, dafür ist nichts zusätzlich zu setzen. Cron-Einrichtung
+(wöchentlich, M1-018) folgt nach dem ersten manuellen Testlauf.
+
 ## API-Schicht (Ports & Adapter)
 
 Screens sprechen das Backend nie direkt an, sondern über `getApi()` aus
